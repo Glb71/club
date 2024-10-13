@@ -1,0 +1,25 @@
+server:
+  port: 8080
+spring:
+  application:
+    name: club
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://${DATABASE_HOST:localhost}:${DATABASE_PORT:5432}/${DATABASE_NAME:snapp_club}
+    username: ${DATABASE_USER_NAME:snapp}
+    password: ${DATABASE_PASSWORD:123456}
+  jpa:
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+    show-sql: true
+logging:
+  level:
+    root: info
+  pattern:
+    console: '%clr(%d{yyyy-MM-dd HH:mm:ss.SSS}){faint} %clr(%-5p) %clr([%t]){magenta} %clr(%c{1.}:%L[%M]){cyan} - %m%n%wEx'
+    file: '%d{yyyy-MM-dd HH:mm:ss.SSS} %-5p [%t] %c{1.}:%L[%M] - %m%n%wEx'
+  file:
+    name: logs/app.log
