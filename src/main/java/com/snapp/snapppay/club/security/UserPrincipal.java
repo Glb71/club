@@ -20,7 +20,7 @@ public class UserPrincipal implements UserDetails {
     private final boolean active;
     private final Set<GrantedAuthority> authorities;
 
-    private UserPrincipal(User user) {
+    protected UserPrincipal(User user) {
         this.id = user.getId();
         this.username = user.getUsername();
         this.password = user.getPassword();
