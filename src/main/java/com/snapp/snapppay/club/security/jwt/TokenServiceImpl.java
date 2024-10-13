@@ -41,12 +41,8 @@ public class TokenServiceImpl implements TokenService {
         authenticateByUsername(claims.getSubject());
     }
 
-    private void authenticate(String username, String password) {
-        SecurityContextHolder.getContext().setAuthentication(new UsernamePasswordAuthenticationToken(username, password));
-    }
-
     private void authenticateByUsername(String username) {
-        authenticate(username, null);
+        SecurityContextHolder.getContext().setAuthentication(new UsernamePasswordAuthenticationToken(username, null));
     }
 
     private Jws<Claims> pars(String token) {

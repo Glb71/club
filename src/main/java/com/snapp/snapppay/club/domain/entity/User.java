@@ -1,4 +1,4 @@
-package com.snapp.snapppay.club.entity;
+package com.snapp.snapppay.club.domain.entity;
 
 import jakarta.persistence.*;
 import lombok.Data;

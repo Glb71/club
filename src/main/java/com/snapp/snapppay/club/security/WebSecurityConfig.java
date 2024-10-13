@@ -31,7 +31,10 @@ public class WebSecurityConfig {
                 .addFilterBefore(new JwtTokenVerifier(tokenService), UsernamePasswordAuthenticationFilter.class)
                 .authenticationProvider(authenticationProvider())
                 .authorizeHttpRequests(authorizeRequests ->
-                        authorizeRequests.anyRequest().authenticated()
+                        authorizeRequests.
+                                requestMatchers("/api/auth/login",
+                                        "/api/auth/register").permitAll()
+                                .anyRequest().authenticated()
                 );
         return http.build();
     }
@@ -40,12 +43,18 @@ public class WebSecurityConfig {
     public DaoAuthenticationProvider authenticationProvider() {
         DaoAuthenticationProvider authenticationProvider = new DaoAuthenticationProvider();
         authenticationProvider.setUserDetailsService(userDetailManager);
+        authenticationProvider.setPasswordEncoder(passwordEncoder());
         return authenticationProvider;
     }
 
     @Bean
     public AuthenticationManager authenticationManager() throws Exception {
         return authenticationConfiguration.getAuthenticationManager();
+    }
+
+    @Bean
+    public PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
     }
 
 }

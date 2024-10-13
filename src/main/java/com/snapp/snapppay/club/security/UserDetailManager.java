@@ -1,6 +1,6 @@
 package com.snapp.snapppay.club.security;
 
-import com.snapp.snapppay.club.entity.User;
+import com.snapp.snapppay.club.domain.entity.User;
 import com.snapp.snapppay.club.exception.ExceptionMessageCode;
 import com.snapp.snapppay.club.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
