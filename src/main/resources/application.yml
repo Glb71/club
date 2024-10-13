@@ -15,6 +15,12 @@ spring:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect
     show-sql: true
+application:
+  jwt:
+    token-expiration-second: ${SEC_TOKEN_EXP_DURATION:900}
+    secret-key: ${SEC_TOKEN_SECRET:mySecretKey_2024!#%&()=+?@^_|~} #TODO: Change it
+    authorization-header: Authorization
+    token-prefix: Bearer
 logging:
   level:
     root: info
