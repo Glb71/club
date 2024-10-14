@@ -1,4 +1,4 @@
-package com.snapp.snapppay.club.service;
+package com.snapp.snapppay.club.service.auth;
 
 import com.snapp.snapppay.club.domain.request.LoginRequest;
 

@@ -2,7 +2,7 @@ package com.snapp.snapppay.club.api;
 
 import com.snapp.snapppay.club.domain.request.PageRequest;
 import com.snapp.snapppay.club.domain.response.UserResponse;
-import com.snapp.snapppay.club.service.UserService;
+import com.snapp.snapppay.club.service.user.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
