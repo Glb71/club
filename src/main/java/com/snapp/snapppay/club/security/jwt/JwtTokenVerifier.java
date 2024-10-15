@@ -1,5 +1,6 @@
 package com.snapp.snapppay.club.security.jwt;
 
+import io.jsonwebtoken.ExpiredJwtException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -19,7 +20,15 @@ public class JwtTokenVerifier extends OncePerRequestFilter {
                                     HttpServletResponse response,
                                     FilterChain filterChain) throws ServletException, IOException {
         if (tokenService.haveTokenHeader(request)) {
-            tokenService.authenticate(request);
+            try {
+                tokenService.authenticate(request);
+            } catch (ExpiredJwtException e) {
+                response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "token expired");
+                return;
+            } catch (Exception e) {
+                response.sendError(HttpServletResponse.SC_BAD_REQUEST, "invalid token format");
+                return;
+            }
         }
         filterChain.doFilter(request, response);
     }
