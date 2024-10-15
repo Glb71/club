@@ -21,6 +21,11 @@ public class UserLoaderServiceImpl implements UserLoaderService {
     }
 
     @Override
+    public User loadByUsername(String username) {
+        return userRepository.findByUsername(username).orElseThrow(() -> new DataNotFoundException(User.class));
+    }
+
+    @Override
     public User current() {
         UserPrincipal userPrincipal = tokenService.getCurrentUserPrincipal();
         return load(userPrincipal.getId());
