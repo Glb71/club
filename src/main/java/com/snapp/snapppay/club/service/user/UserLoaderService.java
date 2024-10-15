@@ -6,4 +6,6 @@ public interface UserLoaderService {
 
     User load(Long id);
 
+    User current();
+
 }
