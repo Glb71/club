@@ -18,10 +18,10 @@ public class UserScore extends EntityStructure {
     @JoinColumn(name = "user_id")
     private User user;
     @Column(name = "total_score")
-    private Integer totalScore;
+    private Integer totalScore = 0;
     @Column(name = "current_score")
-    private Integer currentScore;
+    private Integer currentScore = 0;
     @Column(name = "used_score")
-    private Integer usedScore;
+    private Integer usedScore = 0;
 
 }
