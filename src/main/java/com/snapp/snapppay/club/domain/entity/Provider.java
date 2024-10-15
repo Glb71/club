@@ -1,16 +1,17 @@
 package com.snapp.snapppay.club.domain.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.OneToOne;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 @EqualsAndHashCode(callSuper = true)
 @Data
 @Entity(name = "provider")
-@Table(name = "provider")
+@Table(
+        name = "provider",
+        indexes = {
+                @Index(name = "idx_provider_user", columnList = "user_id")
+        })
 public class Provider extends EntityStructure {
 
     private String title;
