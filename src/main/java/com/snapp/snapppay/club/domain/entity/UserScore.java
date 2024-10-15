@@ -14,7 +14,7 @@ import lombok.EqualsAndHashCode;
         })
 public class UserScore extends EntityStructure {
 
-    @ManyToOne(optional = false)
+    @OneToOne(optional = false)
     @JoinColumn(name = "user_id")
     private User user;
     @Column(name = "total_score")
