@@ -1,16 +1,18 @@
 package com.snapp.snapppay.club.domain.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 @EqualsAndHashCode(callSuper = true)
 @Data
 @Entity(name = "userAccount")
-@Table(name = "user_account")
+@Table(
+        name = "user_account",
+        indexes = {
+                @Index(name = "idx_user_account_provider", columnList = "provider_id"),
+                @Index(name = "idx_user_account_user", columnList = "user_id")
+        })
 public class UserAccount extends EntityStructure {
 
     @ManyToOne(optional = false)

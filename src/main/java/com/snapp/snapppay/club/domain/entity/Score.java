@@ -7,7 +7,11 @@ import lombok.EqualsAndHashCode;
 @EqualsAndHashCode(callSuper = true)
 @Data
 @Entity(name = "score")
-@Table(name = "score")
+@Table(
+        name = "score",
+        indexes = {
+                @Index(name = "idx_score_user_account", columnList = "user_account_id")
+        })
 public class Score extends EntityStructure {
 
     @Column(nullable = false)
