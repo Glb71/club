@@ -24,4 +24,9 @@ public class UserScore extends EntityStructure {
     @Column(name = "used_score")
     private Integer usedScore = 0;
 
+    public void addScore(Integer score) {
+        this.currentScore += score;
+        this.totalScore += score;
+    }
+
 }
