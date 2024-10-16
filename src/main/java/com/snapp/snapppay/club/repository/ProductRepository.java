@@ -12,4 +12,7 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
 
     @Query("select o from product o where :search is null or o.title like %:search% or o.description like %:search%")
     Page<Product> searchAll(@Param("search") String search, Pageable pageable);
+
+    @Query("select o from product o where o.active = true and (:search is null or o.title like %:search% or o.description like %:search%)")
+    Page<Product> searchActives(@Param("search") String search, Pageable pageable);
 }

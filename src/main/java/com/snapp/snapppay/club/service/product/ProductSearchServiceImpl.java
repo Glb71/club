@@ -19,4 +19,10 @@ public class ProductSearchServiceImpl implements ProductSearchService {
     public Page<Product> searchAll(String search, PageRequest pageRequest) {
         return productRepository.searchAll(search, pageRequest.pageable());
     }
+
+    @Override
+    @Transactional(readOnly = true)
+    public Page<Product> searchActives(String search, PageRequest pageRequest) {
+        return productRepository.searchActives(search, pageRequest.pageable());
+    }
 }

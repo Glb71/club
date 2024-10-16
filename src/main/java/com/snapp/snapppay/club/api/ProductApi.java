@@ -37,4 +37,11 @@ public class ProductApi {
         return products.map(adminProductResponseMapper::map);
     }
 
+    @GetMapping("/search/actives")
+    public Page<AdminProductResponse> searchActives(@RequestParam(name = "search", required = false) String search,
+                                                    @Valid PageRequest pageRequest) {
+        Page<Product> products = productSearchService.searchActives(search, pageRequest);
+        return products.map(adminProductResponseMapper::map);
+    }
+
 }

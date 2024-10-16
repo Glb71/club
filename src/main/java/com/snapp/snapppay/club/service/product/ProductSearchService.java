@@ -8,4 +8,6 @@ public interface ProductSearchService {
 
     Page<Product> searchAll(String search, PageRequest pageRequest);
 
+    Page<Product> searchActives(String search, PageRequest pageRequest);
+
 }
