@@ -17,6 +17,12 @@ public class UserScoreLoaderImpl implements UserScoreLoader {
     @Override
     public UserScore current() {
         User user = userLoader.current();
-        return userScoreRepository.findByUser_Id(user.getId()).orElseGet(UserScore::new);
+        return userScoreRepository.findByUser_Id(user.getId()).orElseGet(() -> create(user));
+    }
+
+    private UserScore create(User user) {
+        UserScore userScore = new UserScore();
+        userScore.setUser(user);
+        return userScore;
     }
 }
