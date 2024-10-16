@@ -13,9 +13,12 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     @Query("select o from user o join fetch o.roles r where o.username = :username")
     Optional<User> findByUsernameEager(@Param("username") String username);
+
     Optional<User> findByUsername(String username);
 
-    Optional<User> findByNationalCode(String nationalCode);
+    boolean existsByUsername(String username);
+
+    boolean existsByNationalCode(String nationalCode);
 
     @Query("select o from user o where :search is null or o.username like %:search%")
     Page<User> searchAllByUsername(@Param("search") String search, Pageable pageable);
