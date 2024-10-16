@@ -30,7 +30,7 @@ public class UserRegisterRequestValidatorImpl implements UserRegisterRequestVali
     }
 
     private void validateNationalCode(UserRegisterRequest userRegisterRequest) {
-        Optional<User> user = userRepository.findByNationalCode(userRegisterRequest.getUsername());
+        Optional<User> user = userRepository.findByNationalCode(userRegisterRequest.getNationalCode());
         if (user.isPresent()) {
             throw new ValidationException(ExceptionMessageCode.NATIONAL_CODE_IS_DUPLICATE);
         }
