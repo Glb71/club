@@ -1,4 +1,4 @@
-package service.provider;
+package com.snapp.snapppay.club.service.provider;
 
 import com.snapp.snapppay.club.domain.entity.Provider;
 import com.snapp.snapppay.club.domain.entity.User;

@@ -1,4 +1,4 @@
-package validation;
+package com.snapp.snapppay.club.validation;
 
 import com.snapp.snapppay.club.domain.request.UserRegisterRequest;
 import com.snapp.snapppay.club.exception.ValidationException;

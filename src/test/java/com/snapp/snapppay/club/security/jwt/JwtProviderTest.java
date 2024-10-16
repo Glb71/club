@@ -1,4 +1,4 @@
-package security.jwt;
+package com.snapp.snapppay.club.security.jwt;
 
 import com.snapp.snapppay.club.security.jwt.JwtConfig;
 import com.snapp.snapppay.club.security.jwt.JwtProvider;
