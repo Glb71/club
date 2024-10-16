@@ -9,6 +9,8 @@ public interface ProviderRepository extends JpaRepository<Provider, Long> {
 
     Optional<Provider> findByUser_Id(Long userId);
 
-    Optional<Provider> findByTitle(String title);
+    boolean existsByUser_Id(Long userId);
+
+    boolean existsByTitle(String title);
 
 }
