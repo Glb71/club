@@ -4,8 +4,8 @@ import com.snapp.snapppay.club.domain.entity.Provider;
 import com.snapp.snapppay.club.domain.entity.User;
 import com.snapp.snapppay.club.domain.entity.UserAccount;
 import com.snapp.snapppay.club.repository.UserAccountRepository;
-import com.snapp.snapppay.club.service.provider.ProviderLoaderService;
-import com.snapp.snapppay.club.service.user.UserLoaderService;
+import com.snapp.snapppay.club.service.provider.ProviderLoader;
+import com.snapp.snapppay.club.service.user.UserLoader;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -14,13 +14,13 @@ import org.springframework.stereotype.Service;
 public class UserAccountProviderImpl implements UserAccountProvider {
 
     private final UserAccountRepository userAccountRepository;
-    private final ProviderLoaderService providerLoaderService;
-    private final UserLoaderService userLoaderService;
+    private final ProviderLoader providerLoader;
+    private final UserLoader userLoader;
 
     @Override
     public UserAccount findOrCreate(String username) {
-        Provider provider = providerLoaderService.current();
-        User user = userLoaderService.loadByUsername(username);
+        Provider provider = providerLoader.current();
+        User user = userLoader.loadByUsername(username);
         return userAccountRepository.findByProvider_idAndUser_Id(provider.getId(), user.getId()).
                 orElseGet(() -> create(provider, user));
     }

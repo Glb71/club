@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
-public class UserLoaderServiceImpl implements UserLoaderService {
+public class UserLoaderImpl implements UserLoader {
 
     private final TokenService tokenService;
     private final UserRepository userRepository;

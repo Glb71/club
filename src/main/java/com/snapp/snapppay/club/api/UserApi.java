@@ -1,8 +1,10 @@
 package com.snapp.snapppay.club.api;
 
+import com.snapp.snapppay.club.domain.entity.User;
 import com.snapp.snapppay.club.domain.request.PageRequest;
 import com.snapp.snapppay.club.domain.response.UserResponse;
 import com.snapp.snapppay.club.domain.response.UserScoreResponse;
+import com.snapp.snapppay.club.mapper.UserResponseMapper;
 import com.snapp.snapppay.club.mapper.UserScoreResponseMapper;
 import com.snapp.snapppay.club.service.user.UserService;
 import com.snapp.snapppay.club.service.userScore.UserScoreLoader;
@@ -22,12 +24,14 @@ public class UserApi {
 
     private final UserService userService;
     private final UserScoreLoader userScoreLoader;
+    private final UserResponseMapper userResponseMapper;
     private final UserScoreResponseMapper userScoreResponseMapper;
 
     @GetMapping("/search")
     @PreAuthorize("hasAuthority('ADMIN')")
     public Page<UserResponse> search(@RequestParam(value = "search", required = false) String search, @Valid PageRequest pageRequest) {
-        return userService.search(search, pageRequest);
+        Page<User> users = userService.search(search, pageRequest);
+        return users.map(userResponseMapper::map);
     }
 
     @GetMapping("/score")

@@ -12,7 +12,7 @@ import org.springframework.stereotype.Service;
 public class UserRoleServiceImpl implements UserRoleService {
 
     private final UserRepository userRepository;
-    private final UserLoaderService userLoaderService;
+    private final UserLoader userLoader;
 
     @Override
     public void makeProvider(Long userId) {
@@ -20,7 +20,7 @@ public class UserRoleServiceImpl implements UserRoleService {
     }
 
     private void addRole(Long userId, Roles role) {
-        User user = userLoaderService.load(userId);
+        User user = userLoader.load(userId);
         if (user.getRoles().stream().noneMatch(userRole -> userRole.getRole().equals(role))) {
             UserRole userRole = new UserRole();
             userRole.setRole(role);

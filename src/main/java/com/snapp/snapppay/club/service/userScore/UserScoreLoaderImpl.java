@@ -3,7 +3,7 @@ package com.snapp.snapppay.club.service.userScore;
 import com.snapp.snapppay.club.domain.entity.User;
 import com.snapp.snapppay.club.domain.entity.UserScore;
 import com.snapp.snapppay.club.repository.UserScoreRepository;
-import com.snapp.snapppay.club.service.user.UserLoaderService;
+import com.snapp.snapppay.club.service.user.UserLoader;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -12,11 +12,11 @@ import org.springframework.stereotype.Service;
 public class UserScoreLoaderImpl implements UserScoreLoader {
 
     private final UserScoreRepository userScoreRepository;
-    private final UserLoaderService userLoaderService;
+    private final UserLoader userLoader;
 
     @Override
     public UserScore current() {
-        User user = userLoaderService.current();
+        User user = userLoader.current();
         return userScoreRepository.findByUser_Id(user.getId()).orElseGet(UserScore::new);
     }
 }
