@@ -56,6 +56,9 @@ class UserScoreProviderTest {
         }
         assertNotNull(result, "user account should not be null");
         assertEquals(user, result.getUser(), "user must be equals to found user");
+        assertEquals(0, result.getTotalScore());
+        assertEquals(0, result.getCurrentScore());
+        assertEquals(0, result.getUsedScore());
     }
 
 }
