@@ -15,7 +15,7 @@ public class Product extends EntityStructure {
 
     @Column(unique = true, nullable = false)
     private String title;
-    @Lob
+    @Column(columnDefinition = "text")
     private String description;
     private String image;
     @Column(nullable = false)
