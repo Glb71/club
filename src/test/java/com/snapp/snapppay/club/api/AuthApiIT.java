@@ -1,27 +1,21 @@
 package com.snapp.snapppay.club.api;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.snapp.snapppay.club.domain.entity.User;
-import com.snapp.snapppay.club.domain.entity.UserRole;
 import com.snapp.snapppay.club.domain.request.LoginRequest;
 import com.snapp.snapppay.club.domain.request.UserRegisterRequest;
-import com.snapp.snapppay.club.enums.Roles;
 import com.snapp.snapppay.club.exception.ExceptionMessageCode;
 import com.snapp.snapppay.club.repository.UserRepository;
+import com.snapp.snapppay.club.test.BaseIntegrationTest;
+import com.snapp.snapppay.club.test.UserTestObjectContainer;
 import lombok.SneakyThrows;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.http.MediaType;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 
-import java.util.Collections;
-
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -30,35 +24,24 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @DisplayName("Integration tests for Auth API")
 @Tag("integration")
 @ActiveProfiles("test")
-class AuthApiIT {
+class AuthApiIT extends BaseIntegrationTest {
 
     @Autowired
     private MockMvc mockMvc;
     @Autowired
     private UserRepository userRepository;
-    @Autowired
-    private PasswordEncoder passwordEncoder;
-    @Autowired
-    private ObjectMapper objectMapper;
 
     @BeforeEach
     void setup() {
-        User user = new User();
-        user.setUsername("user");
-        user.setPassword(passwordEncoder.encode("userTestPassword"));
-        user.setNationalCode("1111111111");
-        UserRole userRole = new UserRole();
-        userRole.setRole(Roles.USER);
-        user.setRoles(Collections.singleton(userRole));
-        userRepository.save(user);
+        insertDefaultUser();
     }
 
     @Test
     @SneakyThrows
     void testLoginSuccess() {
         LoginRequest loginRequest = new LoginRequest();
-        loginRequest.setUsername("user");
-        loginRequest.setPassword("userTestPassword");
+        loginRequest.setUsername(UserTestObjectContainer.DEFAULT_USERNAME);
+        loginRequest.setPassword(UserTestObjectContainer.DEFAULT_USER_PASSWORD);
         mockMvc.perform(buildLoginRequest(loginRequest)).andExpect(status().isOk());
     }
 
@@ -66,8 +49,8 @@ class AuthApiIT {
     @SneakyThrows
     void testLoginDenied() {
         LoginRequest loginRequest = new LoginRequest();
-        loginRequest.setUsername("user");
-        loginRequest.setPassword("invalidPassword");
+        loginRequest.setUsername(UserTestObjectContainer.DEFAULT_USERNAME);
+        loginRequest.setPassword(UserTestObjectContainer.INVALID_USER_PASSWORD);
         mockMvc.perform(buildLoginRequest(loginRequest)).andExpect(status().isUnauthorized());
     }
 
@@ -103,18 +86,8 @@ class AuthApiIT {
                 andExpect(content().string(ExceptionMessageCode.NATIONAL_CODE_IS_DUPLICATE));
     }
 
-    MockHttpServletRequestBuilder buildLoginRequest(LoginRequest request) {
-        return buildPostRequest("/api/auth/login", request);
-    }
-
-    MockHttpServletRequestBuilder buildRegisterRequest(UserRegisterRequest request) {
+    protected MockHttpServletRequestBuilder buildRegisterRequest(UserRegisterRequest request) {
         return buildPostRequest("/api/auth/register", request);
-    }
-
-    @SneakyThrows
-    MockHttpServletRequestBuilder buildPostRequest(String url, Object body) {
-        return post(url).contentType(MediaType.APPLICATION_JSON).content(
-                objectMapper.writeValueAsString(body));
     }
 
     @AfterEach
