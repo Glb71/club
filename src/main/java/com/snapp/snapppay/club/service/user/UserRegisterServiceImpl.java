@@ -26,18 +26,17 @@ public class UserRegisterServiceImpl implements UserRegisterService {
     @Override
     public void register(UserRegisterRequest userRegisterRequest) {
         userRegisterRequestValidator.validate(userRegisterRequest);
-        User user = new User();
-        user.setUsername(userRegisterRequest.getUsername());
-        user.setPassword(passwordEncoder.encode(userRegisterRequest.getPassword()));
-        user.setNationalCode(userRegisterRequest.getNationalCode());
-        user.setRoles(initDefaultRoles());
+        User user = User.builder()
+                .username(userRegisterRequest.getUsername())
+                .password(passwordEncoder.encode(userRegisterRequest.getPassword()))
+                .nationalCode(userRegisterRequest.getNationalCode())
+                .roles(initDefaultRoles())
+                .build();
         userRepository.save(user);
     }
 
     private Set<UserRole> initDefaultRoles() {
-        UserRole userRole = new UserRole();
-        userRole.setRole(Roles.getDefaultRole());
-        return Collections.singleton(userRole);
+        return Collections.singleton(new UserRole(Roles.getDefaultRole()));
     }
 
 }

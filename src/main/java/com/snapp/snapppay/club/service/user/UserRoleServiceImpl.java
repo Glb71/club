@@ -22,9 +22,7 @@ public class UserRoleServiceImpl implements UserRoleService {
     private void addRole(Long userId, Roles role) {
         User user = userLoader.load(userId);
         if (user.getRoles().stream().noneMatch(userRole -> userRole.getRole().equals(role))) {
-            UserRole userRole = new UserRole();
-            userRole.setRole(role);
-            user.getRoles().add(userRole);
+            user.getRoles().add(new UserRole(role));
         }
         userRepository.save(user);
     }

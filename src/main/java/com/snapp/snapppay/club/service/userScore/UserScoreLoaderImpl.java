@@ -21,8 +21,8 @@ public class UserScoreLoaderImpl implements UserScoreLoader {
     }
 
     private UserScore create(User user) {
-        UserScore userScore = new UserScore();
-        userScore.setUser(user);
-        return userScore;
+        return UserScore.builder()
+                .user(user)
+                .build();
     }
 }

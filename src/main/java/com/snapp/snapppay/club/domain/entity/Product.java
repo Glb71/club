@@ -20,6 +20,7 @@ public class Product extends EntityStructure {
     private String description;
     private String image;
     @Column(nullable = false)
+    @Builder.Default
     private Boolean active = true;
     @Column(name = "score_price", nullable = false)
     private Integer scorePrice;

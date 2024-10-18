@@ -20,10 +20,13 @@ public class UserScore extends EntityStructure {
     @JoinColumn(name = "user_id")
     private User user;
     @Column(name = "total_score")
+    @Builder.Default
     private Integer totalScore = 0;
     @Column(name = "current_score")
+    @Builder.Default
     private Integer currentScore = 0;
     @Column(name = "used_score")
+    @Builder.Default
     private Integer usedScore = 0;
 
     public void addScore(Integer score) {

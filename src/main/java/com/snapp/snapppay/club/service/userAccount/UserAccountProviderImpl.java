@@ -26,9 +26,10 @@ public class UserAccountProviderImpl implements UserAccountProvider {
     }
 
     private UserAccount create(Provider provider, User user) {
-        UserAccount userAccount = new UserAccount();
-        userAccount.setProvider(provider);
-        userAccount.setUser(user);
+        UserAccount userAccount = UserAccount.builder().
+                provider(provider).
+                user(user).
+                build();
         userAccountRepository.save(userAccount);
         return userAccount;
     }

@@ -22,10 +22,11 @@ public class ScoreServiceImpl implements ScoreService {
     @Override
     public void add(AddScoreRequest addScoreRequest) {
         UserAccount userAccount = userAccountProvider.findOrCreate(addScoreRequest.getUsername());
-        Score score = new Score();
-        score.setScore(addScoreRequest.getScoreAmount());
-        score.setCause(addScoreRequest.getCause());
-        score.setUserAccount(userAccount);
+        Score score = Score.builder()
+                .score(addScoreRequest.getScoreAmount())
+                .cause(addScoreRequest.getCause())
+                .userAccount(userAccount)
+                .build();
         scoreRepository.save(score);
         userScoreUpdater.increase(score);
     }

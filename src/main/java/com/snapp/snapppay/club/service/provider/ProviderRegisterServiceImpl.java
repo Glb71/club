@@ -29,10 +29,10 @@ public class ProviderRegisterServiceImpl implements ProviderRegisterService {
     }
 
     private Provider map(ProviderRegisterRequest providerRegisterRequest) {
-        Provider provider = new Provider();
-        provider.setTitle(providerRegisterRequest.getTitle());
-        provider.setUrl(providerRegisterRequest.getUrl());
-        provider.setUser(userLoader.load(providerRegisterRequest.getUserId()));
-        return provider;
+        return Provider.builder()
+                .title(providerRegisterRequest.getTitle())
+                .url(providerRegisterRequest.getUrl())
+                .user(userLoader.load(providerRegisterRequest.getUserId()))
+                .build();
     }
 }

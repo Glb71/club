@@ -27,8 +27,10 @@ public class User extends EntityStructure {
     @Column(name = "national_code", nullable = false, unique = true)
     private String nationalCode;
     @Column(nullable = false)
+    @Builder.Default
     private Boolean active = true;
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
+    @Builder.Default
     private Set<UserRole> roles = new HashSet<>();
 }
