@@ -64,7 +64,7 @@ public class ProviderApi {
             description = "add score to user (provider)",
             requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(
                     description = "AddScoreRequest for creating score from it",
-                    content = @Content(schema = @Schema(implementation = ProviderRegisterRequest.class))
+                    content = @Content(schema = @Schema(implementation = AddScoreRequest.class))
             )
     )
     @ApiResponses(
