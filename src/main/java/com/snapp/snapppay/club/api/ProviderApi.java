@@ -4,6 +4,12 @@ import com.snapp.snapppay.club.domain.request.AddScoreRequest;
 import com.snapp.snapppay.club.domain.request.ProviderRegisterRequest;
 import com.snapp.snapppay.club.service.provider.ProviderRegisterService;
 import com.snapp.snapppay.club.service.score.ScoreService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -15,6 +21,10 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/api/provider")
 @RequiredArgsConstructor
+@Tag(
+        name = "Provider Api",
+        description = "add , add score"
+)
 public class ProviderApi {
 
     private final ProviderRegisterService providerRegisterService;
@@ -22,6 +32,26 @@ public class ProviderApi {
 
     @PostMapping("/add")
     @PreAuthorize("hasAuthority('ADMIN')")
+    @Operation(
+            summary = "add new provider",
+            description = "creates a new provider (admin)",
+            requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(
+                    description = "ProviderRegisterRequest for creating provider from it",
+                    content = @Content(schema = @Schema(implementation = ProviderRegisterRequest.class))
+            )
+    )
+    @ApiResponses(
+            value = {
+                    @ApiResponse(responseCode = "200", description = "provider created successfully",
+                            content = {@Content(mediaType = "text/plain")}),
+                    @ApiResponse(responseCode = "401", description = "expired token",
+                            content = {@Content(mediaType = "text/plain")}),
+                    @ApiResponse(responseCode = "403", description = "Access Denied",
+                            content = {@Content(mediaType = "text/plain")}),
+                    @ApiResponse(responseCode = "400", description = "invalid input (missing required fields in body or validations)",
+                            content = {@Content(mediaType = "application/json")})
+            }
+    )
     public String addProvider(@Valid @RequestBody ProviderRegisterRequest providerRegisterRequest) {
         providerRegisterService.register(providerRegisterRequest);
         return "success";
@@ -29,6 +59,26 @@ public class ProviderApi {
 
     @PostMapping("/addScore")
     @PreAuthorize("hasAuthority('PROVIDER')")
+    @Operation(
+            summary = "add score",
+            description = "add score to user (provider)",
+            requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(
+                    description = "AddScoreRequest for creating score from it",
+                    content = @Content(schema = @Schema(implementation = ProviderRegisterRequest.class))
+            )
+    )
+    @ApiResponses(
+            value = {
+                    @ApiResponse(responseCode = "200", description = "score added successfully",
+                            content = {@Content(mediaType = "text/plain")}),
+                    @ApiResponse(responseCode = "401", description = "expired token",
+                            content = {@Content(mediaType = "text/plain")}),
+                    @ApiResponse(responseCode = "403", description = "Access Denied",
+                            content = {@Content(mediaType = "text/plain")}),
+                    @ApiResponse(responseCode = "400", description = "invalid input (missing required fields in body or validations)",
+                            content = {@Content(mediaType = "application/json")})
+            }
+    )
     public String addScore(@Valid @RequestBody AddScoreRequest addScoreRequest) {
         scoreService.add(addScoreRequest);
         return "success";
