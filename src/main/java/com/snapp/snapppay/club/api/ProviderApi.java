@@ -12,6 +12,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -52,9 +53,9 @@ public class ProviderApi {
                             content = {@Content(mediaType = "application/json")})
             }
     )
-    public String addProvider(@Valid @RequestBody ProviderRegisterRequest providerRegisterRequest) {
+    public ResponseEntity<String> addProvider(@Valid @RequestBody ProviderRegisterRequest providerRegisterRequest) {
         providerRegisterService.register(providerRegisterRequest);
-        return "success";
+        return ResponseEntity.ok("success");
     }
 
     @PostMapping("/addScore")
@@ -79,9 +80,9 @@ public class ProviderApi {
                             content = {@Content(mediaType = "application/json")})
             }
     )
-    public String addScore(@Valid @RequestBody AddScoreRequest addScoreRequest) {
+    public ResponseEntity<String> addScore(@Valid @RequestBody AddScoreRequest addScoreRequest) {
         scoreService.add(addScoreRequest);
-        return "success";
+        return ResponseEntity.ok("success");
     }
 
 

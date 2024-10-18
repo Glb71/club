@@ -12,6 +12,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -48,8 +49,8 @@ public class AuthApi {
             }
     )
     @PostMapping("/login")
-    public String login(@Valid @RequestBody LoginRequest loginRequest) {
-        return loginService.login(loginRequest);
+    public ResponseEntity<String> login(@Valid @RequestBody LoginRequest loginRequest) {
+        return ResponseEntity.ok(loginService.login(loginRequest));
     }
 
     @Operation(
@@ -69,9 +70,9 @@ public class AuthApi {
             }
     )
     @PostMapping("/register")
-    public String register(@Valid @RequestBody UserRegisterRequest userRegisterRequest) {
+    public ResponseEntity<String> register(@Valid @RequestBody UserRegisterRequest userRegisterRequest) {
         userRegisterService.register(userRegisterRequest);
-        return "success";
+        return ResponseEntity.ok("success");
     }
 
 }

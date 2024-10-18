@@ -17,6 +17,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
@@ -55,9 +56,9 @@ public class ProductApi {
     )
     @PostMapping("/add")
     @PreAuthorize("hasAuthority('ADMIN')")
-    public String add(@Valid @RequestBody ProductRegisterRequest productRegisterRequest) {
+    public ResponseEntity<String> add(@Valid @RequestBody ProductRegisterRequest productRegisterRequest) {
         productRegisterService.register(productRegisterRequest);
-        return "success";
+        return ResponseEntity.ok("success");
     }
 
     @Operation(
@@ -78,11 +79,11 @@ public class ProductApi {
     )
     @GetMapping("/search/all")
     @PreAuthorize("hasAuthority('ADMIN')")
-    public Page<AdminProductResponse> searchAll(@Parameter(description = "search parameter (title or description filter)")
-                                                @RequestParam(name = "search", required = false) String search,
-                                                @Valid PageRequest pageRequest) {
+    public ResponseEntity<Page<AdminProductResponse>> searchAll(@Parameter(description = "search parameter (title or description filter)")
+                                                                @RequestParam(name = "search", required = false) String search,
+                                                                @Valid PageRequest pageRequest) {
         Page<Product> products = productSearchService.searchAll(search, pageRequest);
-        return products.map(adminProductResponseMapper::map);
+        return ResponseEntity.ok(products.map(adminProductResponseMapper::map));
     }
 
     @Operation(
@@ -100,10 +101,10 @@ public class ProductApi {
             }
     )
     @GetMapping("/search/actives")
-    public Page<AdminProductResponse> searchActives(@RequestParam(name = "search", required = false) String search,
+    public ResponseEntity<Page<AdminProductResponse>> searchActives(@RequestParam(name = "search", required = false) String search,
                                                     @Valid PageRequest pageRequest) {
         Page<Product> products = productSearchService.searchActives(search, pageRequest);
-        return products.map(adminProductResponseMapper::map);
+        return ResponseEntity.ok(products.map(adminProductResponseMapper::map));
     }
 
 }

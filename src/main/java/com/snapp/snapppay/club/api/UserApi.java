@@ -17,6 +17,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -56,12 +57,12 @@ public class UserApi {
                             content = {@Content(mediaType = "application/json")})
             }
     )
-    public Page<UserResponse> search(
+    public ResponseEntity<Page<UserResponse>> search(
             @Parameter(description = "search parameter (username)")
             @RequestParam(value = "search", required = false) String search,
             @Valid PageRequest pageRequest) {
         Page<User> users = userService.search(search, pageRequest);
-        return users.map(userResponseMapper::map);
+        return ResponseEntity.ok(users.map(userResponseMapper::map));
     }
 
     @GetMapping("/score")
@@ -79,7 +80,7 @@ public class UserApi {
                             content = {@Content(mediaType = "text/plain")})
             }
     )
-    public UserScoreResponse getUserScore() {
-        return userScoreResponseMapper.map(userScoreLoader.current());
+    public ResponseEntity<UserScoreResponse> getUserScore() {
+        return ResponseEntity.ok(userScoreResponseMapper.map(userScoreLoader.current()));
     }
 }
