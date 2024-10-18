@@ -1,8 +1,7 @@
 package com.snapp.snapppay.club.domain.entity;
 
 import jakarta.persistence.*;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
+import lombok.*;
 
 @EqualsAndHashCode(callSuper = true)
 @Data
@@ -12,6 +11,9 @@ import lombok.EqualsAndHashCode;
         indexes = {
                 @Index(name = "idx_score_user_account", columnList = "user_account_id")
         })
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class Score extends EntityStructure {
 
     @Column(nullable = false)

@@ -1,8 +1,7 @@
 package com.snapp.snapppay.club.domain.entity;
 
 import jakarta.persistence.*;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
+import lombok.*;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -16,6 +15,9 @@ import java.util.Set;
                 @Index(name = "idx_username", columnList = "username"),
                 @Index(name = "idx_national_code", columnList = "national_code")
         })
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class User extends EntityStructure {
 
     @Column(name = "username", nullable = false, unique = true)
