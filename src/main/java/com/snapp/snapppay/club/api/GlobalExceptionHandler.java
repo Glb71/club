@@ -26,7 +26,7 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(AuthorizationDeniedException.class)
-    public ResponseEntity<String> handle(AuthorizationDeniedException e){
+    public ResponseEntity<String> handle(AuthorizationDeniedException e) {
         return ResponseEntity.status(HttpStatus.FORBIDDEN).body(e.getMessage());
     }
 
@@ -50,6 +50,12 @@ public class GlobalExceptionHandler {
     public ResponseEntity<Pair<String, Long>> handle(DataNotFoundException dataNotFoundException) {
         logError(dataNotFoundException);
         return new ResponseEntity<>(Pair.of(dataNotFoundException.getType(), dataNotFoundException.getId()), HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<String> handle(Exception exception) {
+        logError(exception);
+        return new ResponseEntity<>("error", HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
     private void logError(Exception e) {
