@@ -8,6 +8,7 @@ import com.snapp.snapppay.club.mapper.AdminProductResponseMapper;
 import com.snapp.snapppay.club.service.product.ProductRegisterService;
 import com.snapp.snapppay.club.service.product.ProductSearchService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -77,7 +78,8 @@ public class ProductApi {
     )
     @GetMapping("/search/all")
     @PreAuthorize("hasAuthority('ADMIN')")
-    public Page<AdminProductResponse> searchAll(@RequestParam(name = "search", required = false) String search,
+    public Page<AdminProductResponse> searchAll(@Parameter(description = "search parameter (title or description filter)")
+                                                @RequestParam(name = "search", required = false) String search,
                                                 @Valid PageRequest pageRequest) {
         Page<Product> products = productSearchService.searchAll(search, pageRequest);
         return products.map(adminProductResponseMapper::map);
