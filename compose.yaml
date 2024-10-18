@@ -1,9 +1,40 @@
+version: '3.8'
 services:
   postgres:
-    image: 'postgres:latest'
+    image: 'postgres:14'
+    container_name: snap_club_db
+    ports:
+      - '5436:5432'
+    volumes:
+      - 'snap_club_db_volume:/var/lib/postgresql/data'
     environment:
       - 'POSTGRES_DB=snapp_club'
       - 'POSTGRES_PASSWORD=123456'
       - 'POSTGRES_USER=snapp'
+    networks:
+      - snapp_club_network
+    restart: unless-stopped
+  club_app:
+    build: .
+#    image: snapp/club_app
+    container_name: club_app_container
     ports:
-      - '5432'
+      - '8080:8080'
+    environment:
+      - 'DATABASE_HOST=postgres'
+      - 'DATABASE_PORT=5432'
+      - 'DATABASE_NAME=snapp_club'
+      - 'DATABASE_USER_NAME=snapp'
+      - 'DATABASE_PASSWORD=123456'
+      - 'SEC_TOKEN_EXP_DURATION=9000'
+      - 'SEC_TOKEN_SECRET=myJWTSecretKey_2024!#%&()=+?@^_|~'
+    networks:
+      - snapp_club_network
+    depends_on:
+      - postgres
+    restart: on-failure
+volumes:
+  snap_club_db_volume:
+networks:
+  snapp_club_network:
+    driver: bridge

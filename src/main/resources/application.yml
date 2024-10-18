@@ -5,7 +5,7 @@ spring:
     name: club
   datasource:
     driver-class-name: org.postgresql.Driver
-    url: jdbc:postgresql://${DATABASE_HOST:localhost}:${DATABASE_PORT:5432}/${DATABASE_NAME:snapp_club}
+    url: jdbc:postgresql://${DATABASE_HOST:postgres}:${DATABASE_PORT:5432}/${DATABASE_NAME:snapp_club}
     username: ${DATABASE_USER_NAME:snapp}
     password: ${DATABASE_PASSWORD:123456}
   jpa:
@@ -19,7 +19,7 @@ spring:
     show-sql: true
 application:
   jwt:
-    token-expiration-second: ${SEC_TOKEN_EXP_DURATION:900}
+    token-expiration-second: ${SEC_TOKEN_EXP_DURATION:9000}
     secret-key: ${SEC_TOKEN_SECRET:myJWTSecretKey_2024!#%&()=+?@^_|~} #TODO: Change it
     authorization-header: Authorization
     token-prefix: Bearer
