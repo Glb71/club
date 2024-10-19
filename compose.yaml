@@ -16,7 +16,6 @@ services:
     restart: unless-stopped
   club_app:
     build: .
-#    image: snapp/club_app
     container_name: club_app_container
     ports:
       - '8080:8080'
