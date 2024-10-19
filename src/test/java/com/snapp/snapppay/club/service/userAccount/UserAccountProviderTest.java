@@ -6,6 +6,7 @@ import com.snapp.snapppay.club.domain.entity.UserAccount;
 import com.snapp.snapppay.club.repository.UserAccountRepository;
 import com.snapp.snapppay.club.service.provider.ProviderLoader;
 import com.snapp.snapppay.club.service.user.UserLoader;
+import com.snapp.snapppay.club.service.user.UserLocker;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -30,11 +31,13 @@ class UserAccountProviderTest {
     private ProviderLoader providerLoader;
     @Mock
     private UserAccountRepository userAccountRepository;
+    @Mock
+    private UserLocker userLocker;
 
 
     @BeforeEach
     void setup() {
-        userAccountProvider = new UserAccountProviderImpl(userAccountRepository, providerLoader, userLoader);
+        userAccountProvider = new UserAccountProviderImpl(userAccountRepository, providerLoader, userLoader, userLocker);
         user = new User();
         user.setUsername("testUser");
         provider = new Provider();
