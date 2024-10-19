@@ -14,7 +14,7 @@ import lombok.*;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class Score extends EntityStructure {
+public class Score extends EntityStructure implements ScoreUp {
 
     @Column(nullable = false)
     private Integer score;
@@ -24,4 +24,8 @@ public class Score extends EntityStructure {
     @JoinColumn(name = "user_account_id")
     private UserAccount userAccount;
 
+    @Override
+    public User getUser() {
+        return userAccount != null ? userAccount.getUser() : null;
+    }
 }

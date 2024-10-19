@@ -34,4 +34,9 @@ public class UserScore extends EntityStructure {
         this.totalScore += score;
     }
 
+    public void reduceScore(Integer score) {
+        this.currentScore -= score;
+        this.usedScore += score;
+    }
+
 }

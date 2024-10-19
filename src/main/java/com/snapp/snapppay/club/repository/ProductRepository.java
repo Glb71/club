@@ -7,6 +7,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import java.util.Optional;
+
 public interface ProductRepository extends JpaRepository<Product, Long> {
     boolean existsByTitle(String title);
 
@@ -15,4 +17,6 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
 
     @Query("select o from product o where o.active = true and (:search is null or o.title like %:search% or o.description like %:search%)")
     Page<Product> searchActives(@Param("search") String search, Pageable pageable);
+
+    Optional<Product> findByIdAndActiveTrue(Long id);
 }

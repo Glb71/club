@@ -9,6 +9,7 @@ import com.snapp.snapppay.club.mapper.AdminProductResponseMapper;
 import com.snapp.snapppay.club.mapper.UserProductResponseMapper;
 import com.snapp.snapppay.club.service.product.ProductRegisterService;
 import com.snapp.snapppay.club.service.product.ProductSearchService;
+import com.snapp.snapppay.club.service.purchase.PurchaseService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -36,6 +37,7 @@ public class ProductApi {
     private final ProductSearchService productSearchService;
     private final AdminProductResponseMapper adminProductResponseMapper;
     private final UserProductResponseMapper userProductResponseMapper;
+    private final PurchaseService purchaseService;
 
     @Operation(
             summary = "add new product",
@@ -108,6 +110,25 @@ public class ProductApi {
                                                                    @Valid PageRequest pageRequest) {
         Page<Product> products = productSearchService.searchActives(search, pageRequest);
         return ResponseEntity.ok(products.map(userProductResponseMapper::map));
+    }
+
+    @Operation(
+            summary = "purchase product"
+    )
+    @ApiResponses(
+            value = {
+                    @ApiResponse(responseCode = "200", description = "purchase successful",
+                            content = {@Content(mediaType = "application/json")}),
+                    @ApiResponse(responseCode = "401", description = "expired token",
+                            content = {@Content(mediaType = "text/plain")}),
+                    @ApiResponse(responseCode = "400", description = "invalid input or insufficient score",
+                            content = {@Content(mediaType = "application/json")})
+            }
+    )
+    @PostMapping("/purchase/{productId}")
+    public ResponseEntity<String> purchase(@PathVariable Long productId) {
+        purchaseService.purchase(productId);
+        return ResponseEntity.ok("success");
     }
 
 }
