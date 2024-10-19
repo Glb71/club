@@ -4,13 +4,16 @@ import com.snapp.snapppay.club.domain.entity.Product;
 import com.snapp.snapppay.club.domain.request.ProductRegisterRequest;
 import com.snapp.snapppay.club.exception.ExceptionMessageCode;
 import com.snapp.snapppay.club.repository.ProductRepository;
-import com.snapp.snapppay.club.repository.UserRepository;
 import com.snapp.snapppay.club.test.BaseIntegrationTest;
 import lombok.SneakyThrows;
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Tag;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
@@ -23,12 +26,11 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @DisplayName("Integration tests for Product API")
 @Tag("integration")
 @ActiveProfiles("test")
+@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 class ProductApiIT extends BaseIntegrationTest {
 
     @Autowired
     private MockMvc mockMvc;
-    @Autowired
-    private UserRepository userRepository;
     @Autowired
     private ProductRepository productRepository;
 
@@ -110,12 +112,6 @@ class ProductApiIT extends BaseIntegrationTest {
     @SneakyThrows
     private MockHttpServletRequestBuilder addProductRequest(ProductRegisterRequest body, String token) {
         return buildPostRequest("/api/product/add", body, token);
-    }
-
-    @AfterEach
-    void tearDown() {
-        userRepository.deleteAll();
-        productRepository.deleteAll();
     }
 
 }

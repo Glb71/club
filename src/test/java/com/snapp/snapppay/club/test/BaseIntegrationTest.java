@@ -1,9 +1,10 @@
 package com.snapp.snapppay.club.test;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.snapp.snapppay.club.domain.entity.Provider;
 import com.snapp.snapppay.club.domain.entity.User;
 import com.snapp.snapppay.club.domain.request.LoginRequest;
-import com.snapp.snapppay.club.repository.UserRepository;
+import com.snapp.snapppay.club.repository.*;
 import com.snapp.snapppay.club.security.jwt.JwtConfig;
 import jakarta.annotation.PostConstruct;
 import lombok.SneakyThrows;
@@ -21,6 +22,14 @@ public abstract class BaseIntegrationTest {
     @Autowired
     protected UserRepository userRepository;
     @Autowired
+    protected ProviderRepository providerRepository;
+    @Autowired
+    protected UserAccountRepository userAccountRepository;
+    @Autowired
+    protected ScoreRepository scoreRepository;
+    @Autowired
+    protected UserScoreRepository userScoreRepository;
+    @Autowired
     protected PasswordEncoder passwordEncoder;
     @Autowired
     protected ObjectMapper objectMapper;
@@ -36,9 +45,32 @@ public abstract class BaseIntegrationTest {
         userTestObjectContainer = new UserTestObjectContainer(passwordEncoder);
     }
 
-    protected void insertDefaultUser() {
+    protected Provider insertDefaultProvider() {
+        User defaultProvider = userTestObjectContainer.createDefaultProvider();
+        userRepository.save(defaultProvider);
+        Provider provider = Provider.builder()
+                .user(defaultProvider)
+                .title("provider")
+                .build();
+        providerRepository.save(provider);
+        return provider;
+    }
+
+    protected Provider insertDefaultProvider2() {
+        User defaultProvider = userTestObjectContainer.createDefaultProvider2();
+        userRepository.save(defaultProvider);
+        Provider provider = Provider.builder()
+                .user(defaultProvider)
+                .title("provider2")
+                .build();
+        providerRepository.save(provider);
+        return provider;
+    }
+
+    protected User insertDefaultUser() {
         User defaultUser = userTestObjectContainer.createDefaultUser();
         userRepository.save(defaultUser);
+        return defaultUser;
     }
 
     protected void insertDefaultAdmin() {
@@ -52,6 +84,14 @@ public abstract class BaseIntegrationTest {
 
     public String getDefaultAdminToken() {
         return getToken(UserTestObjectContainer.DEFAULT_ADMIN_USERNAME, UserTestObjectContainer.DEFAULT_ADMIN_PASSWORD);
+    }
+
+    public String getDefaultProviderToken() {
+        return getToken(UserTestObjectContainer.DEFAULT_PROVIDER_USERNAME, UserTestObjectContainer.DEFAULT_PROVIDER_PASSWORD);
+    }
+
+    public String getDefaultProvider2Token() {
+        return getToken(UserTestObjectContainer.DEFAULT_PROVIDER2_USERNAME, UserTestObjectContainer.DEFAULT_PROVIDER2_PASSWORD);
     }
 
     @SneakyThrows
