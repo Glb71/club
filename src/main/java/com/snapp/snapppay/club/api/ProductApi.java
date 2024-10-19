@@ -4,7 +4,9 @@ import com.snapp.snapppay.club.domain.entity.Product;
 import com.snapp.snapppay.club.domain.request.PageRequest;
 import com.snapp.snapppay.club.domain.request.ProductRegisterRequest;
 import com.snapp.snapppay.club.domain.response.AdminProductResponse;
+import com.snapp.snapppay.club.domain.response.UserProductResponse;
 import com.snapp.snapppay.club.mapper.AdminProductResponseMapper;
+import com.snapp.snapppay.club.mapper.UserProductResponseMapper;
 import com.snapp.snapppay.club.service.product.ProductRegisterService;
 import com.snapp.snapppay.club.service.product.ProductSearchService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -33,6 +35,7 @@ public class ProductApi {
     private final ProductRegisterService productRegisterService;
     private final ProductSearchService productSearchService;
     private final AdminProductResponseMapper adminProductResponseMapper;
+    private final UserProductResponseMapper userProductResponseMapper;
 
     @Operation(
             summary = "add new product",
@@ -101,10 +104,10 @@ public class ProductApi {
             }
     )
     @GetMapping("/search/actives")
-    public ResponseEntity<Page<AdminProductResponse>> searchActives(@RequestParam(name = "search", required = false) String search,
-                                                    @Valid PageRequest pageRequest) {
+    public ResponseEntity<Page<UserProductResponse>> searchActives(@RequestParam(name = "search", required = false) String search,
+                                                                   @Valid PageRequest pageRequest) {
         Page<Product> products = productSearchService.searchActives(search, pageRequest);
-        return ResponseEntity.ok(products.map(adminProductResponseMapper::map));
+        return ResponseEntity.ok(products.map(userProductResponseMapper::map));
     }
 
 }
