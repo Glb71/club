@@ -1,11 +1,15 @@
 package com.snapp.snapppay.club.api;
 
+import com.snapp.snapppay.club.domain.entity.Purchase;
 import com.snapp.snapppay.club.domain.entity.User;
 import com.snapp.snapppay.club.domain.request.PageRequest;
+import com.snapp.snapppay.club.domain.response.PurchaseResponse;
 import com.snapp.snapppay.club.domain.response.UserResponse;
 import com.snapp.snapppay.club.domain.response.UserScoreResponse;
+import com.snapp.snapppay.club.mapper.PurchaseResponseMapper;
 import com.snapp.snapppay.club.mapper.UserResponseMapper;
 import com.snapp.snapppay.club.mapper.UserScoreResponseMapper;
+import com.snapp.snapppay.club.service.purchase.PurchaseSearchService;
 import com.snapp.snapppay.club.service.user.UserService;
 import com.snapp.snapppay.club.service.userScore.UserScoreLoader;
 import io.swagger.v3.oas.annotations.Operation;
@@ -38,6 +42,8 @@ public class UserApi {
     private final UserScoreLoader userScoreLoader;
     private final UserResponseMapper userResponseMapper;
     private final UserScoreResponseMapper userScoreResponseMapper;
+    private final PurchaseSearchService purchaseSearchService;
+    private final PurchaseResponseMapper purchaseResponseMapper;
 
     @GetMapping("/search")
     @PreAuthorize("hasAuthority('ADMIN')")
@@ -82,5 +88,11 @@ public class UserApi {
     )
     public ResponseEntity<UserScoreResponse> getUserScore() {
         return ResponseEntity.ok(userScoreResponseMapper.map(userScoreLoader.current()));
+    }
+
+    @GetMapping("/purchases")
+    public ResponseEntity<Page<PurchaseResponse>> getCurrentUserPurchases(@RequestParam(value = "search", required = false) String search, @Valid PageRequest pageRequest) {
+        Page<Purchase> purchases = purchaseSearchService.search(search, pageRequest);
+        return ResponseEntity.ok(purchases.map(purchaseResponseMapper::map));
     }
 }
