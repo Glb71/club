@@ -3,6 +3,7 @@ package com.snapp.snapppay.club.service.userScore;
 import com.snapp.snapppay.club.domain.entity.User;
 import com.snapp.snapppay.club.domain.entity.UserScore;
 import com.snapp.snapppay.club.repository.ConcurrentUserScoreRepository;
+import com.snapp.snapppay.club.service.user.UserLocker;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -22,11 +23,13 @@ class UserScoreProviderTest {
     private User user;
     @Mock
     private ConcurrentUserScoreRepository concurrentUserScoreRepository;
+    @Mock
+    private UserLocker userLocker;
 
 
     @BeforeEach
     void setup() {
-        userScoreProvider = new UserScoreProviderImpl(concurrentUserScoreRepository);
+        userScoreProvider = new UserScoreProviderImpl(concurrentUserScoreRepository, userLocker);
         user = new User();
     }
 

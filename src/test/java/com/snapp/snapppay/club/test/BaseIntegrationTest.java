@@ -1,8 +1,10 @@
 package com.snapp.snapppay.club.test;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.snapp.snapppay.club.domain.entity.Product;
 import com.snapp.snapppay.club.domain.entity.Provider;
 import com.snapp.snapppay.club.domain.entity.User;
+import com.snapp.snapppay.club.domain.entity.UserScore;
 import com.snapp.snapppay.club.domain.request.LoginRequest;
 import com.snapp.snapppay.club.repository.*;
 import com.snapp.snapppay.club.security.jwt.JwtConfig;
@@ -37,6 +39,8 @@ public abstract class BaseIntegrationTest {
     protected MockMvc mockMvc;
     @Autowired
     protected JwtConfig jwtConfig;
+    @Autowired
+    protected ProductRepository productRepository;
 
     private UserTestObjectContainer userTestObjectContainer;
 
@@ -73,9 +77,25 @@ public abstract class BaseIntegrationTest {
         return defaultUser;
     }
 
+    protected void addScoreToUser(User user, Integer score) {
+        UserScore userScore = userScoreRepository.findByUser_Id(user.getId()).orElse(UserScore.builder().user(user).build());
+        userScore.addScore(score);
+        userScoreRepository.save(userScore);
+    }
+
     protected void insertDefaultAdmin() {
         User defaultAdmin = userTestObjectContainer.createDefaultAdmin();
         userRepository.save(defaultAdmin);
+    }
+
+    protected Product insertProduct(String title,Integer score,Boolean active) {
+        Product product = Product.builder()
+                .title(title)
+                .scorePrice(score)
+                .active(active)
+                .build();
+        productRepository.save(product);
+        return product;
     }
 
     public String getDefaultUserToken() {
@@ -105,12 +125,21 @@ public abstract class BaseIntegrationTest {
 
     @SneakyThrows
     protected MockHttpServletRequestBuilder buildPostRequest(String url, Object body) {
-        return post(url).contentType(MediaType.APPLICATION_JSON).content(
+        return buildPostRequest(url).content(
                 objectMapper.writeValueAsString(body));
+    }
+
+    @SneakyThrows
+    protected MockHttpServletRequestBuilder buildPostRequest(String url) {
+        return post(url).contentType(MediaType.APPLICATION_JSON);
     }
 
     protected MockHttpServletRequestBuilder buildPostRequest(String url, Object body, String token) {
         return buildPostRequest(url, body).header(jwtConfig.getAuthorizationHeader(), jwtConfig.getTokenPrefix().concat(" ").concat(token));
+    }
+
+    protected MockHttpServletRequestBuilder buildPostRequest(String url, String token) {
+        return buildPostRequest(url).header(jwtConfig.getAuthorizationHeader(), jwtConfig.getTokenPrefix().concat(" ").concat(token));
     }
 
     protected MockHttpServletRequestBuilder buildLoginRequest(LoginRequest request) {

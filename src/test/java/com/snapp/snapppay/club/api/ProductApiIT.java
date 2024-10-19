@@ -1,9 +1,10 @@
 package com.snapp.snapppay.club.api;
 
 import com.snapp.snapppay.club.domain.entity.Product;
+import com.snapp.snapppay.club.domain.entity.User;
+import com.snapp.snapppay.club.domain.entity.UserScore;
 import com.snapp.snapppay.club.domain.request.ProductRegisterRequest;
 import com.snapp.snapppay.club.exception.ExceptionMessageCode;
-import com.snapp.snapppay.club.repository.ProductRepository;
 import com.snapp.snapppay.club.test.BaseIntegrationTest;
 import lombok.SneakyThrows;
 import org.junit.jupiter.api.BeforeEach;
@@ -18,7 +19,13 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+
 import static org.hamcrest.Matchers.is;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @SpringBootTest
@@ -31,30 +38,24 @@ class ProductApiIT extends BaseIntegrationTest {
 
     @Autowired
     private MockMvc mockMvc;
-    @Autowired
-    private ProductRepository productRepository;
 
     private String userToken;
     private String adminToken;
+    private User defaultUser;
+    private Product testProduct;
 
     @BeforeEach
     void setup() {
-        insertDefaultUser();
+        defaultUser = insertDefaultUser();
+        addScoreToUser(defaultUser, 220);
         insertDefaultAdmin();
 
         userToken = getDefaultUserToken();
         adminToken = getDefaultAdminToken();
 
-        Product product = new Product();
-        product.setTitle("testProduct");
-        product.setScorePrice(100);
-        productRepository.save(product);
+        testProduct = insertProduct("testProduct", 100, true);
 
-        Product notActiveProduct = new Product();
-        notActiveProduct.setTitle("notActiveProduct");
-        notActiveProduct.setScorePrice(200);
-        notActiveProduct.setActive(false);
-        productRepository.save(notActiveProduct);
+        insertProduct("notActiveProduct", 200, false);
     }
 
     @Test
@@ -107,6 +108,52 @@ class ProductApiIT extends BaseIntegrationTest {
         mockMvc.perform(buildGetRequest("/api/product/search/actives", adminToken).
                         param("page", "0")).andExpect(status().isOk())
                 .andExpect(jsonPath("$.page.totalElements", is(1)));
+    }
+
+    @Test
+    @SneakyThrows
+    void testPurchaseSuccess() {
+        mockMvc.perform(buildPostRequest("/api/product/purchase/" + testProduct.getId(), userToken)).andExpect(status().isOk());
+        Optional<UserScore> userScore = userScoreRepository.findByUser_Id(defaultUser.getId());
+        assertTrue(userScore.isPresent());
+        assertEquals(120, userScore.get().getCurrentScore());
+        assertEquals(100, userScore.get().getUsedScore());
+    }
+
+    @Test
+    @SneakyThrows
+    void testPurchaseConcurrency() {
+        Product product = insertProduct("product 1 score", 1, true);
+        List<Thread> threads = new ArrayList<>();
+        int counter = 0;
+        while (counter < 100) {
+            Thread thread = new Thread(() -> {
+                try {
+                    mockMvc.perform(buildPostRequest("/api/product/purchase/" + product.getId(), userToken)).andExpect(status().isOk());
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
+                }
+            });
+            threads.add(thread);
+            thread.start();
+            counter++;
+        }
+        for (Thread thread : threads) {
+            thread.join();
+        }
+
+        Optional<UserScore> userScore = userScoreRepository.findByUser_Id(defaultUser.getId());
+        assertTrue(userScore.isPresent());
+        assertEquals(120, userScore.get().getCurrentScore());
+        assertEquals(100, userScore.get().getUsedScore());
+    }
+
+    @Test
+    @SneakyThrows
+    void testPurchaseInsufficientScore() {
+        Product product = insertProduct("product 1000 score", 1000, true);
+        mockMvc.perform(buildPostRequest("/api/product/purchase/" + product.getId(), userToken)).andExpect(status().isBadRequest())
+                .andExpect(content().string(ExceptionMessageCode.INSUFFICIENT_SCORE));
     }
 
     @SneakyThrows
