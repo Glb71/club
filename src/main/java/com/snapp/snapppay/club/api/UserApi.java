@@ -91,7 +91,22 @@ public class UserApi {
     }
 
     @GetMapping("/purchases")
-    public ResponseEntity<Page<PurchaseResponse>> getCurrentUserPurchases(@RequestParam(value = "search", required = false) String search, @Valid PageRequest pageRequest) {
+    @Operation(
+            summary = "get current user purchases",
+            description = "gives current user purchases"
+    )
+    @ApiResponses(
+            value = {
+                    @ApiResponse(responseCode = "200", description = "successful",
+                            content = {@Content(mediaType = "application/json")}),
+                    @ApiResponse(responseCode = "401", description = "expired token",
+                            content = {@Content(mediaType = "text/plain")}),
+                    @ApiResponse(responseCode = "403", description = "Access Denied",
+                            content = {@Content(mediaType = "text/plain")})
+            }
+    )
+    public ResponseEntity<Page<PurchaseResponse>> getCurrentUserPurchases(
+            @RequestParam(value = "search", required = false) String search, @Valid PageRequest pageRequest) {
         Page<Purchase> purchases = purchaseSearchService.search(search, pageRequest);
         return ResponseEntity.ok(purchases.map(purchaseResponseMapper::map));
     }
