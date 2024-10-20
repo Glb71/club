@@ -6,7 +6,13 @@ import lombok.*;
 @EqualsAndHashCode(callSuper = true)
 @Data
 @Entity(name = "purchase")
-@Table(name = "purchase")
+@Table(
+        name = "purchase",
+        indexes = {
+                @Index(name = "idx_purchase_user", columnList = "user_id"),
+                @Index(name = "idx_purchase_product", columnList = "product_id")
+        }
+)
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
