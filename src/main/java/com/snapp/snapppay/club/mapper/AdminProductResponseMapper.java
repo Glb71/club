@@ -12,6 +12,7 @@ public interface AdminProductResponseMapper {
     @Mapping(source = "updateUser", target = "updater", qualifiedByName = "userIdToUsername")
     @Mapping(source = "insertDateTime", target = "creationTime")
     @Mapping(source = "updateDateTime", target = "lastUpdateTime")
+    @Mapping(source = "scorePrice", target = "scoreAmount")
     AdminProductResponse map(Product product);
 
 }
